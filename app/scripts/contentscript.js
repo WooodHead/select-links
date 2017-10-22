@@ -8,6 +8,22 @@ console.log(`'Allo 'Allo! Content script`)
 // }).mouseleave((e) => {
 //   $(e.target).removeClass('test')
 // })
+
+var selected = null
+
+function clearSelected() {
+  var ele = document.getElementsByClassName(selectedClass)
+  if (ele.length > 0) {
+    document.getElementsByClassName(selectedClass)[0] &&
+      document.getElementsByClassName(selectedClass)[0].classList.remove(selectedClass)
+  }
+}
+
+function selectParent() {
+
+}
+
+var selectedClass = 'test-selected'
 document.querySelectorAll('*').forEach((item) => {
   item.addEventListener('mouseenter', (e) => {
     e.target.classList.add('test')
@@ -17,16 +33,13 @@ document.querySelectorAll('*').forEach((item) => {
   })
 
   item.addEventListener('click', (e) => {
-    var ele = document.getElementsByClassName('test-click')
-    console.log('ele', ele)
-    if (ele.length > 0) {
-      document.getElementsByClassName('test-click')[0] && document.getElementsByClassName('test-click')[0].classList.remove('test-click')
-    }
-    // e.target.classList.add('test-click')
-    // e.stopPropagation()
-    // e.preventDefault()
+    console.log('e.target', e.target)
+    clearSelected()
+    e.target.classList && e.target.classList.add(selectedClass)
+    e.stopPropagation()
+    e.preventDefault()
     return false
-  })
+  }, false)
 
 })
 
@@ -37,4 +50,4 @@ document.addEventListener('keyup', (e) => {
 var overlay = document.createElement('div')
 overlay.className = 'overlay'
 // document.body.appendChild(overlay)
-console.log('12322')
+console.log('22')
