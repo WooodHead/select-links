@@ -36,13 +36,13 @@ function getLinks(ele) {
   for (var i = 0; i < elements.length; i++) {
     console.log('elements[i].text', elements[i].text)
     links[i] = {
-      hash: elements[i].hash,
-      host: elements[i].host,
-      hostname: elements[i].hostname,
-      href: elements[i].href,
-      pathname: elements[i].pathname,
-      search: elements[i].search,
-      text: elements[i].text
+      hash: elements[i].hash.trim(),
+      host: elements[i].host.trim(),
+      hostname: elements[i].hostname.trim(),
+      href: elements[i].href.trim(),
+      pathname: elements[i].pathname.trim(),
+      search: elements[i].search.trim(),
+      text: elements[i].text.trim()
     }
   }
   return links
@@ -85,9 +85,7 @@ document.addEventListener('keyup', (e) => {
   if (e.key === "Enter" || e.key === "-") {
     var links = getLinks(selected)
     console.log('links', links)
-    chrome
-      .runtime
-      .sendMessage(links)
+    chrome.runtime.sendMessage(links)
   }
 
 })

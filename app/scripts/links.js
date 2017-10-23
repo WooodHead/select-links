@@ -7,16 +7,15 @@ function clearList() {
 }
 
 function getListItem(data) {
-  return `<a href="${data.href}">
-      <div class="row">
+  return `
+      <div class="row selected">
         <div class="col-sm-4">
           <div class="text">${data.text}</div>
         </div>
         <div class="col-sm-8">
-          <div class="href">${data.href}</div>
+          <a href="${data.href}" class="href">${data.href}</>
         </div>
-      </div>
-  </a>`
+      </div>`
 }
 
 function listenInputChange() {
@@ -40,12 +39,47 @@ function addToList(some) {
   var list = document.getElementById('LinkList')
   some.forEach((item, index) => {
     var li = document.createElement('li')
+
     var html = getListItem(item)
 
     li.innerHTML = html
     list.appendChild(li)
+    li.addEventListener('click', (e) => {
+      var row = li.getElementsByClassName('row')[0]
+      row.classList.toggle('selected')
+    })
   })
+}
 
+function copyToClipboard() {
+  var selection = window.getSelection()
+  var prevRange = selection.rangeCount ? selection.getRangeAt(0).cloneRange() : null
+  var tmp = document.createElement("div")
+  var linkList = document.getElementById('LinkList')
+  var all = linkList.querySelectorAll(".selected .href")
+
+  for (var i = 0; i < all.length; i++) {
+    var clone = all[i].cloneNode(true);
+    tmp.appendChild(clone)
+    tmp.appendChild(document.createElement("div"));
+  }
+
+  document.body.appendChild(tmp);
+  var copyFrom = document.createRange();
+  copyFrom.selectNodeContents(tmp)
+  selection.removeAllRanges()
+  selection.addRange(copyFrom)
+  document.execCommand("copy")
+  document.body.removeChild(tmp)
+  selection.removeAllRanges()
+  prevRange && selection.addRange(prevRange);
+}
+
+function listenButton() {
+  var button = document.getElementById('btn-copy')
+  button.addEventListener('click', (e) => {
+    copyToClipboard()
+  })
 }
 
 function init() {

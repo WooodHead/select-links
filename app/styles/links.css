@@ -5,11 +5,15 @@
 
 li {
   list-style: none;
-  padding: 3px;
+  padding: 3px 5px 3px;
 }
 
-li:nth-child(odd) {
-  background: #EEE;
+li:nth-child(odd) .row {
+  background: #F5F5F5;
+}
+
+.selected {
+  outline: 1px solid lightskyblue;
 }
 
 .filter {
