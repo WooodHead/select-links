@@ -1,4 +1,5 @@
 {
   "indent_size": 2,
-  "brace_style": "collapse,preserve-inline"
+  "brace_style": "collapse,preserve-inline",
+  "break_chained_methods": false
 }

@@ -5,6 +5,11 @@
 
 li {
   list-style: none;
+  padding: 3px;
+}
+
+li:nth-child(odd) {
+  background: #EEE;
 }
 
 .filter {

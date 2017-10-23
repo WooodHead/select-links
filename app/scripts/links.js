@@ -1,9 +1,22 @@
 var links = []
-
+var some = []
 
 function clearList() {
   var list = document.getElementById('LinkList')
   list.innerHTML = ''
+}
+
+function getListItem(data) {
+  return `<a href="${data.href}">
+      <div class="row">
+        <div class="col-sm-4">
+          <div class="text">${data.text}</div>
+        </div>
+        <div class="col-sm-8">
+          <div class="href">${data.href}</div>
+        </div>
+      </div>
+  </a>`
 }
 
 function listenInputChange() {
@@ -14,8 +27,8 @@ function listenInputChange() {
     if (val === '') {
       addToList(links)
     } else {
-      var some = links.filter((item) => {
-        return item.href.indexOf(val) !== -1
+      some = links.filter((item) => {
+        return item.href.indexOf(val) !== -1 || item.text.indexOf(val) !== -1
       })
       addToList(some)
     }
@@ -27,41 +40,34 @@ function addToList(some) {
   var list = document.getElementById('LinkList')
   some.forEach((item, index) => {
     var li = document.createElement('li')
-    var a = document.createElement('a')
-    a.href = item.href
+    var html = getListItem(item)
 
-    if (item.text.trim() !== '') {
-      var text = document.createElement('p')
-      text.className = 'title'
-      text.textContent = item.text
-      a.appendChild(text)
-    }
-
-    var href = document.createElement('p')
-    href.textContent = item.href
-    href.className = 'href'
-
-    a.appendChild(href)
-    li.appendChild(a)
+    li.innerHTML = html
     list.appendChild(li)
   })
 
 }
 
-
-function main() {
+function init() {
   chrome.tabs.query({
     active: true
-  }, function (tabs) {
-    chrome.runtime.getBackgroundPage(function (bg) {
+  }, function(tabs) {
+    chrome.runtime.getBackgroundPage(function(bg) {
       var data = bg.tabData[tabs[0].id];
       console.log('data', data)
       links = data.links
       addToList(links)
     })
   })
+}
 
+
+
+
+function main() {
+  init()
   listenInputChange()
+  listenButton()
 }
 
 main()

@@ -1,12 +1,12 @@
 {
   "presets": [
-    ["env", {
-      "targets": {
-        "browsers": "last 2 versions"
-      },
-      "useBuiltIns": true,
-      "debug": false
-    }]
+    ["env", { "target": { "browser": "last 2 versions" } }],
+    "react"
+  ],
+  "plugins": [
+    "transform-class-properties",
+    "transform-decorators-legacy",
+    "transform-runtime"
   ],
   "ignore": ["node_modules"]
 }
