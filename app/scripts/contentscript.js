@@ -10,6 +10,7 @@ console.log(`'Allo 'Allo! Content script`)
 // })
 
 var selected = null
+var selectedClass = 'test-selected'
 
 function clearSelected() {
   var ele = document.getElementsByClassName(selectedClass)
@@ -20,10 +21,33 @@ function clearSelected() {
 }
 
 function selectParent() {
-
+  console.log('selectParent')
+  console.log('selected', selected)
+  if (selected && selected.parentNode) {
+    selected = selected.parentNode
+    selected.classList.add(selectedClass)
+  }
 }
 
-var selectedClass = 'test-selected'
+function getLinks(ele) {
+  var elements = ele.querySelectorAll("a:link:not([href^=javascript])")
+  var links = new Array(elements.length)
+
+  for (var i = 0; i < elements.length; i++) {
+    console.log('elements[i].text', elements[i].text)
+    links[i] = {
+      hash: elements[i].hash,
+      host: elements[i].host,
+      hostname: elements[i].hostname,
+      href: elements[i].href,
+      pathname: elements[i].pathname,
+      search: elements[i].search,
+      text: elements[i].text
+    }
+  }
+  return links
+}
+
 document.querySelectorAll('*').forEach((item) => {
   item.addEventListener('mouseenter', (e) => {
     e.target.classList.add('test')
@@ -33,18 +57,29 @@ document.querySelectorAll('*').forEach((item) => {
   })
 
   item.addEventListener('click', (e) => {
-    console.log('e.target', e.target)
     clearSelected()
-    e.target.classList && e.target.classList.add(selectedClass)
-    e.stopPropagation()
-    e.preventDefault()
-    return false
-  }, false)
+    selected = e.target
+    selected.classList && selected.classList.add(selectedClass)
+    // e.stopPropagation()
+    // e.preventDefault()
+    // return false
+  })
 
 })
 
 document.addEventListener('keyup', (e) => {
   console.log('e', e)
+
+  if (e.key === "=") {
+    clearSelected()
+    selectParent()
+  }
+  if (e.key === "Enter" || e.key === "-") {
+    var links = getLinks(selected)
+    console.log('links', links)
+    chrome.runtime.sendMessage(links)
+  }
+
 })
 
 var overlay = document.createElement('div')
