@@ -1,11 +1,6 @@
 var links = []
 var some = []
 
-function clearList() {
-  var list = document.getElementById('LinkList')
-  list.innerHTML = ''
-}
-
 function getListItem(data) {
   return `
       <div class="row selected">
@@ -16,6 +11,11 @@ function getListItem(data) {
           <a href="${data.href}" class="href">${data.href}</>
         </div>
       </div>`
+}
+
+function clearList() {
+  var list = document.getElementById('LinkList')
+  list.innerHTML = ''
 }
 
 function listenInputChange() {
@@ -39,9 +39,7 @@ function addToList(some) {
   var list = document.getElementById('LinkList')
   some.forEach((item, index) => {
     var li = document.createElement('li')
-
     var html = getListItem(item)
-
     li.innerHTML = html
     list.appendChild(li)
     li.addEventListener('click', (e) => {
@@ -57,13 +55,11 @@ function copyToClipboard() {
   var tmp = document.createElement("div")
   var linkList = document.getElementById('LinkList')
   var all = linkList.querySelectorAll(".selected .href")
-
   for (var i = 0; i < all.length; i++) {
     var clone = all[i].cloneNode(true);
     tmp.appendChild(clone)
     tmp.appendChild(document.createElement("div"));
   }
-
   document.body.appendChild(tmp);
   var copyFrom = document.createRange();
   copyFrom.selectNodeContents(tmp)
@@ -75,7 +71,7 @@ function copyToClipboard() {
   prevRange && selection.addRange(prevRange);
 }
 
-function listenButton() {
+function listenButtonClick() {
   var button = document.getElementById('btn-copy')
   button.addEventListener('click', (e) => {
     copyToClipboard()
@@ -95,13 +91,9 @@ function init() {
   })
 }
 
-
-
-
 function main() {
   init()
   listenInputChange()
-  listenButton()
+  listenButtonClick()
 }
-
 main()

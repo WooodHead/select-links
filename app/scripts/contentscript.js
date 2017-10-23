@@ -11,10 +11,8 @@ var selectedClass = 'test-selected'
 function clearSelected() {
   var ele = document.getElementsByClassName(selectedClass)
   if (ele.length > 0) {
-    document.getElementsByClassName(selectedClass)[0] && document
-      .getElementsByClassName(selectedClass)[0]
-      .classList
-      .remove(selectedClass)
+    document.getElementsByClassName(selectedClass)[0] &&
+      document.getElementsByClassName(selectedClass)[0].classList.remove(selectedClass)
   }
 }
 
@@ -23,9 +21,7 @@ function selectParent() {
   console.log('selected', selected)
   if (selected && selected.parentNode) {
     selected = selected.parentNode
-    selected
-      .classList
-      .add(selectedClass)
+    selected.classList.add(selectedClass)
   }
 }
 
@@ -52,24 +48,16 @@ document
   .querySelectorAll('*')
   .forEach((item) => {
     item.addEventListener('mouseenter', (e) => {
-      e
-        .target
-        .classList
-        .add('test')
+      e.target.classList.add('test')
     })
     item.addEventListener('mouseleave', (e) => {
-      e
-        .target
-        .classList
-        .remove('test')
+      e.target.classList.remove('test')
     })
 
     item.addEventListener('click', (e) => {
       clearSelected()
       selected = e.target
-      selected.classList && selected
-        .classList
-        .add(selectedClass)
+      selected.classList && selected.classList.add(selectedClass)
       // e.stopPropagation() e.preventDefault() return false
     })
 
