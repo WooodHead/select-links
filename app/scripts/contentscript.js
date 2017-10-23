@@ -2,11 +2,11 @@
 
 console.log(`'Allo 'Allo! Content script`)
 
-// $('*').mouseenter((e) => {   $(e.target).addClass('test') }).mouseleave((e)
-// => {   $(e.target).removeClass('test') })
-
 var selected = null
 var selectedClass = 'test-selected'
+var overClass = 'test'
+var onOff = 'off'
+var stack = []
 
 function clearSelected() {
   var ele = document.getElementsByClassName(selectedClass)
@@ -16,11 +16,25 @@ function clearSelected() {
   }
 }
 
+function clearOver() {
+  $('.' + overClass).removeClass(overClass)
+}
+
 function selectParent() {
   console.log('selectParent')
   console.log('selected', selected)
-  if (selected && selected.parentNode) {
+  if (selected && selected.parentNode && selected.parentNode.classList && selected.parentNode.tagName !== 'HTML') {
+    stack.push(selected)
+
     selected = selected.parentNode
+    selected.classList.add(selectedClass)
+  }
+}
+
+function goBack() {
+  if (stack.length > 0) {
+    clearSelected()
+    selected = stack.pop()
     selected.classList.add(selectedClass)
   }
 }
@@ -44,41 +58,97 @@ function getLinks(ele) {
   return links
 }
 
-document
-  .querySelectorAll('*')
-  .forEach((item) => {
-    item.addEventListener('mouseenter', (e) => {
-      e.target.classList.add('test')
-    })
-    item.addEventListener('mouseleave', (e) => {
-      e.target.classList.remove('test')
-    })
+function onMouseEnter(e) {
+  e.target.classList.add(overClass)
+}
 
-    item.addEventListener('click', (e) => {
-      clearSelected()
-      selected = e.target
-      selected.classList && selected.classList.add(selectedClass)
-      // e.stopPropagation() e.preventDefault() return false
-    })
+function onMouseLeave(e) {
+  e.target.classList.remove(overClass)
+}
 
-  })
-
-document.addEventListener('keyup', (e) => {
-  console.log('e', e)
-
+function onKeyUp(e) {
   if (e.key === "=") {
     clearSelected()
     selectParent()
   }
-  if (e.key === "Enter" || e.key === "-") {
-    var links = getLinks(selected)
-    console.log('links', links)
-    chrome.runtime.sendMessage(links)
+  if (e.key === "-") {
+    goBack()
   }
+  if (e.key === "Enter") {
+    var links = getLinks(selected)
+    var msg = {
+      name: 'newtab',
+      links: links
+    }
+    console.log('msg', msg)
+    chrome.runtime.sendMessage(msg)
+  }
+  if (e.key === "Escape") {
+    chrome.runtime.sendMessage({
+      name: "stop"
+    })
+  }
+}
 
+function onMouseClick(e) {
+  clearSelected()
+  stack = []
+  selected = e.target
+  selected.classList && selected.classList.add(selectedClass)
+  e.preventDefault()
+  return false
+}
+
+function addAllListener() {
+  console.log('addAllListener')
+  document.querySelectorAll('*').forEach((item) => {
+    item.addEventListener('mouseenter', onMouseEnter)
+    item.addEventListener('mouseleave', onMouseLeave)
+    item.addEventListener('click', onMouseClick)
+  })
+  document.addEventListener('keyup', onKeyUp)
+}
+
+function removeAllListener() {
+  clearSelected()
+  clearOver()
+  selected = null
+
+  document.querySelectorAll('*').forEach((item) => {
+    item.removeEventListener('mouseenter', onMouseEnter)
+    item.removeEventListener('mouseleave', onMouseLeave)
+    item.removeEventListener('click', onMouseClick)
+  })
+  document.removeEventListener('keyup', onKeyUp)
+}
+
+function addMessageListener() {
+  chrome.runtime.onMessage.addListener(function(msg, sender, sendRes) {
+    if (msg.name === "start") {
+      console.log('start')
+      addAllListener()
+      onOff = 'on'
+    }
+    if (msg.name === "stop") {
+      console.log('stop')
+      removeAllListener()
+      onOff = 'off'
+    }
+    if (msg.name === 'status') {
+      console.log('status')
+      sendRes(onOff)
+    }
+  })
+}
+
+function main() {
+  addMessageListener()
+}
+
+// var overlay = document.createElement('div')
+// overlay.className = 'overlay'
+// // document.body.appendChild(overlay)
+// console.log('22')
+$(document).ready(function() {
+  main()
 })
-
-var overlay = document.createElement('div')
-overlay.className = 'overlay'
-// document.body.appendChild(overlay)
-console.log('22')
