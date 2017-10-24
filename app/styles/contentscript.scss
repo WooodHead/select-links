@@ -13,27 +13,11 @@ img.test-selected {
   outline: none !important;
 }
 
-.aatest-selected:before {
-  content: "+";
-  display: inline-block;
-  width: 30px;
-  height: 30px;
-  position: absolute;
-  background: rgba(0, 0, 0, 0.5);
-  left: 0;
-  top: 0;
-  font-size: 20px;
-  line-height: 30px;
-  text-align: center;
-  color: #FFF;
-  cursor: pointer;
-}
-
-.overlay {
-  background-color: lightblue;
-  bottom: 0;
-  left: 0;
-  position: fixed;
-  right: 0;
-  top: 0;
-}
+// .overlay {
+//   background-color: lightblue;
+//   bottom: 0;
+//   left: 0;
+//   position: fixed;
+//   right: 0;
+//   top: 0;
+// }
