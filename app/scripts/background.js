@@ -23,7 +23,6 @@ function start() {
   chrome.browserAction.setBadgeText({
     text: `ON`
   })
-
   sendToTab({
     name: "start"
   })
@@ -66,21 +65,29 @@ function addNewTabListener() {
   })
 }
 
+function updateBadget() {
+  sendToTab({ name: "status" }, function(res) {
+    if (res === 'on') {
+      chrome.browserAction.setBadgeText({
+        text: `ON`
+      })
+    } else {
+      chrome.browserAction.setBadgeText({
+        text: ``
+      })
+    }
+  })
+}
+
 function addTabListener() {
   chrome.tabs.onActivated.addListener(function(changeInfo) {
-    console.log('changeInfo', changeInfo)
-
-    sendToTab({ name: "status" }, function(res) {
-      if (res === 'on') {
-        start()
-      } else {
-        stop()
-      }
-    })
+    updateBadget()
     // chrome.browserAction.setBadgeText({ text: newText, tabId: tab.id });
   })
   chrome.tabs.onUpdated.addListener(function(tabId, changeInfo, tab) {
-    stop()
+    if (tab.active) {
+      updateBadget()
+    }
   })
 
 }

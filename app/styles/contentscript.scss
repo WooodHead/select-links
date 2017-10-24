@@ -4,8 +4,13 @@
 }
 
 .test-selected {
-  outline: 5px dashed orange !important;
+  outline: 5px dashed orangered !important;
   position: relative;
+}
+
+img.test-selected {
+  border: 5px dashed orangered !important;
+  outline: none !important;
 }
 
 .aatest-selected:before {
