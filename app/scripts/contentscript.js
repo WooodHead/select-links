@@ -47,7 +47,6 @@ $(document).ready(function() {
 
   function focusSelected() {
     if (!isFocusable(selected)) {
-      console.log('not focusable')
       selected.setAttribute('tabindex', -1);
     }
     selected.focus()
