@@ -1,5 +1,5 @@
 // Enable chromereload by uncommenting this line: import 'chromereload/devonly'
-$(document).ready(function() {
+window.onload = function() {
   console.log(`'Allo 'Allo! Content script`)
 
   var selected = null
@@ -141,7 +141,6 @@ $(document).ready(function() {
   }
 
   function addAllListener() {
-    console.log('addAllListener')
     document.querySelectorAll('*').forEach((item) => {
       item.addEventListener('mouseenter', onMouseEnter)
       item.addEventListener('mouseleave', onMouseLeave)
@@ -191,4 +190,4 @@ $(document).ready(function() {
   // // document.body.appendChild(overlay)
   // console.log('22')
   main()
-})
+}

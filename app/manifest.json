@@ -27,12 +27,9 @@
       "https://*/*"
     ],
     "css": [
-      "styles/lib/bootstrap.min.css",
       "styles/contentscript.css"
     ],
     "js": [
-      "scripts/lib/jquery.min.js",
-      "scripts/lib/bootstrap.min.js",
       "scripts/contentscript.js"
     ],
     "run_at": "document_end",
